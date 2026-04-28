@@ -42,12 +42,12 @@ const variantClasses = {
     mobile: 'border-t border-slate-200/70 bg-white/95',
   },
   'editorial-bar': {
-    shell: 'border-b border-[#d7c4b3] bg-[#fff7ee]/90 text-[#2f1d16] backdrop-blur-xl',
-    logo: 'rounded-full border border-[#dbc6b6] bg-white shadow-sm',
-    active: 'bg-[#2f1d16] text-[#fff4e4]',
-    idle: 'text-[#72594a] hover:bg-[#f2e5d4] hover:text-[#2f1d16]',
-    cta: 'rounded-full bg-[#2f1d16] text-[#fff4e4] hover:bg-[#452920]',
-    mobile: 'border-t border-[#dbc6b6] bg-[#fff7ee]',
+    shell: 'border-b border-[#632626]/15 bg-gradient-to-r from-white/98 via-[#DACC96]/5 to-white/98 text-[#632626] backdrop-blur-xl shadow-sm',
+    logo: 'rounded-full border border-[#632626]/15 bg-gradient-to-br from-white to-[#DACC96]/20 shadow-md',
+    active: 'bg-gradient-to-r from-[#632626] to-[#9D5353] text-white shadow-sm',
+    idle: 'text-[#6e5547] hover:bg-gradient-to-r hover:from-[#DACC96]/20 hover:to-[#BF8B67]/10 hover:text-[#632626] transition-all',
+    cta: 'rounded-full bg-gradient-to-r from-[#632626] to-[#9D5353] text-white hover:from-[#9D5353] hover:to-[#BF8B67] shadow-md transition-all',
+    mobile: 'border-t border-[#632626]/15 bg-gradient-to-r from-white to-[#DACC96]/10',
   },
   'floating-bar': {
     shell: 'border-b border-transparent bg-transparent text-white',
@@ -222,16 +222,16 @@ export function Navbar() {
 
           {isEditorial ? (
             <div className="hidden min-w-0 flex-1 items-center gap-4 xl:flex">
-              <div className="h-px flex-1 bg-[#d8c8bb]" />
+              <div className="h-px flex-1 bg-[#632626]/20" />
               {primaryNavigation.map((task) => {
                 const isActive = pathname.startsWith(task.route)
                 return (
-                  <Link key={task.key} href={task.route} className={cn('text-sm font-semibold uppercase tracking-[0.18em] transition-colors', isActive ? 'text-[#2f1d16]' : 'text-[#7b6254] hover:text-[#2f1d16]')}>
+                  <Link key={task.key} href={task.route} className={cn('text-sm font-semibold uppercase tracking-[0.18em] transition-colors', isActive ? 'text-[#632626]' : 'text-[#6e5547] hover:text-[#632626]')}>
                     {task.label}
                   </Link>
                 )
               })}
-              <div className="h-px flex-1 bg-[#d8c8bb]" />
+              <div className="h-px flex-1 bg-[#632626]/20" />
             </div>
           ) : isFloating ? (
             <div className="hidden min-w-0 flex-1 items-center gap-2 xl:flex">

@@ -1,93 +1,190 @@
 import Link from "next/link";
-import { PageShell } from "@/components/shared/page-shell";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { mockTeamMembers } from "@/data/mock-data";
+import { NavbarShell } from "@/components/shared/navbar-shell";
+import { Footer } from "@/components/shared/footer";
 import { SITE_CONFIG } from "@/lib/site-config";
+import { ArrowRight, Users, Target, Zap, MapPin } from "lucide-react";
 
 const highlights = [
-  { label: "Creators onboarded", value: "12k+" },
-  { label: "Bookmarks shared", value: "180k" },
-  { label: "Listings published", value: "8.6k" },
+  { label: "Media Outlets", value: "5,000+" },
+  { label: "Monthly Readers", value: "10M+" },
+  { label: "Success Rate", value: "98%" },
 ];
 
 const values = [
-  { title: "Curated by people", description: "We believe trusted recommendations beat endless feeds." },
-  { title: "Designed for focus", description: "Clear, calm UI helps you find the next best resource fast." },
-  { title: "Built to share", description: "Collections make collaboration and knowledge flow effortless." },
+  { 
+    title: "Trusted Distribution", 
+    description: "We connect your press releases with thousands of verified media outlets and journalists worldwide.",
+    icon: Target
+  },
+  { 
+    title: "Real Results", 
+    description: "Our proven track record shows 98% success rate in getting press releases published and covered.",
+    icon: Zap
+  },
+  { 
+    title: "Expert Support", 
+    description: "Our dedicated team provides 24/7 support to ensure your press releases reach the right audience.",
+    icon: Users
+  },
+];
+
+const teamMembers = [
+  {
+    id: 1,
+    name: "Jennifer Davis",
+    role: "CEO & Founder",
+    bio: "Former PR executive with 15+ years of media relations experience.",
+    location: "New York, NY",
+    initials: "JD"
+  },
+  {
+    id: 2,
+    name: "Michael Roberts",
+    role: "Head of Operations",
+    bio: "Expert in media distribution and press release optimization.",
+    location: "San Francisco, CA",
+    initials: "MR"
+  },
+  {
+    id: 3,
+    name: "Sarah Chen",
+    role: "Director of Media Relations",
+    bio: "Specializes in building lasting relationships with media professionals.",
+    location: "Chicago, IL",
+    initials: "SC"
+  }
 ];
 
 export default function AboutPage() {
   return (
-    <PageShell
-      title={`About ${SITE_CONFIG.name}`}
-      description={`${SITE_CONFIG.name} is a modern platform for creators, communities, and curated business discovery.`}
-      actions={
-        <>
-          <Button variant="outline" asChild>
-            <Link href="/team">Meet the Team</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/contact">Contact Us</Link>
-          </Button>
-        </>
-      }
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-border bg-card">
-          <CardContent className="space-y-4 p-6">
-            <Badge variant="secondary">Our Story</Badge>
-            <h2 className="text-2xl font-semibold text-foreground">
-              A single home for knowledge, discovery, and community.
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {SITE_CONFIG.name} brings together publishing, listings, and social bookmarking so teams can move faster
-              and keep their best resources close.
+    <div className="min-h-screen bg-white text-gray-900">
+      <NavbarShell />
+      
+      <main>
+        {/* Hero Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="mx-auto max-w-6xl text-center">
+            <h1 className="text-5xl font-bold text-gray-900 sm:text-6xl lg:text-7xl mb-6">
+              About <span className="text-blue-600">Hutdaily News</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+              Your trusted partner for professional press release distribution and media relations. 
+              We help businesses and organizations share their stories with the world.
             </p>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {highlights.map((item) => (
-                <div key={item.label} className="rounded-lg border border-border bg-secondary/40 p-4">
-                  <div className="text-2xl font-semibold text-foreground">{item.value}</div>
-                  <div className="text-xs text-muted-foreground">{item.label}</div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                href="/contact" 
+                className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Contact Us
+              </Link>
+              <Link 
+                href="/updates" 
+                className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              >
+                View Press Releases
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Statistics Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Impact</h2>
+              <p className="text-xl text-gray-600">Numbers that speak for themselves</p>
+            </div>
+            
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
+              {highlights.map((item, index) => {
+                const colors = ['bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600']
+                return (
+                  <div key={item.label} className="text-center">
+                    <div className={`w-20 h-20 ${colors[index]} rounded-full flex items-center justify-center mx-auto mb-6`}>
+                      <span className="text-3xl font-bold">{item.value}</span>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 mb-2">{item.value}</div>
+                    <p className="text-gray-600 font-medium">{item.label}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Our Story Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-gray-50">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-12 lg:grid-cols-2 items-center">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] bg-blue-100 text-blue-600 border border-blue-200 mb-6">
+                  Our Story
+                </span>
+                <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                  A single home for press release distribution and media relations.
+                </h2>
+                <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                  Hutdaily News brings together press release distribution, media relations, and analytics so businesses can 
+                  reach their audience effectively and track their impact in real-time.
+                </p>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Founded with the mission to democratize media access, we've helped thousands of organizations 
+                  share their stories with millions of readers worldwide.
+                </p>
+              </div>
+              <div className="grid gap-6">
+                {values.map((value, index) => {
+                  const Icon = value.icon
+                  const iconColors = ['bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600']
+                  return (
+                    <div key={value.title} className="bg-white p-6 rounded-xl shadow-lg">
+                      <div className={`w-12 h-12 ${iconColors[index]} rounded-lg flex items-center justify-center mb-4`}>
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">{value.title}</h3>
+                      <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Team Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
+              <p className="text-xl text-gray-600">The experts behind your press release success</p>
+            </div>
+            
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {teamMembers.map((member) => (
+                <div key={member.id} className="bg-gray-50 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-xl font-bold text-blue-600">{member.initials}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+                      <p className="text-gray-600">{member.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed mb-4">{member.bio}</p>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <MapPin className="h-4 w-4" />
+                    <span>{member.location}</span>
+                  </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-        <div className="space-y-4">
-          {values.map((value) => (
-            <Card key={value.title} className="border-border bg-card">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-foreground">{value.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{value.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+          </div>
+        </section>
+      </main>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {mockTeamMembers.map((member) => (
-          <Card key={member.id} className="border-border bg-card transition-transform hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                  <p className="text-xs text-muted-foreground">{member.role}</p>
-                </div>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
-              <p className="mt-3 text-xs text-muted-foreground">{member.location}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </PageShell>
+      <Footer />
+    </div>
   );
 }
