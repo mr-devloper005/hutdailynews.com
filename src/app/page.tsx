@@ -40,6 +40,11 @@ const taskIcons: Record<TaskKey, any> = {
   classified: Tag,
   image: ImageIcon,
   profile: User,
+  social: Globe2,
+  pdf: FileText,
+  org: Building2,
+  comment: FileText,
+  mediaDistribution: Globe2,
 }
 
 function resolveTaskKey(value: unknown, fallback: TaskKey): TaskKey {
@@ -257,14 +262,14 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
           <div className="grid gap-4 md:grid-cols-2">
             {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
               const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
+              const taskKey = resolveTaskKey('classified', profilePosts.length ? 'profile' : 'classified')
               return (
                 <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
                   <div className="relative h-44 overflow-hidden">
                     <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || post.task || 'Profile'}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || 'Profile'}</p>
                     <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
                     <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Quick access to local information and related surfaces.'}</p>
                   </div>
@@ -310,161 +315,222 @@ function EditorialHome({
   posts: SitePost[]
   supportTasks: EnabledTask[]
 }) {
-  const tone = getEditorialTone()
   const defaultEditorialTask: TaskKey =
     primaryTask?.key === 'mediaDistribution' || primaryTask?.key === 'article'
       ? primaryTask.key
-      : 'article'
+      : 'mediaDistribution'
 
   const postHref = (post: SitePost) =>
-    getTaskHref(resolveTaskKey((post as { task?: unknown }).task, defaultEditorialTask), post.slug)
+    getTaskHref(defaultEditorialTask, post.slug)
 
   const lead = posts[0]
-  const spotlightPosts = posts.slice(1, 4)
-  const deckPosts = posts.slice(10, 16)
+  const spotlightPosts = posts.slice(1, 7)
+  const deckPosts = posts.slice(7, 13)
   const featuredSecondary = posts[1]
 
-  const headline = lead?.title || SITE_CONFIG.name
+  const headline = lead?.title || "Latest Press Releases & Media Updates"
   const summarySource = lead?.summary || SITE_CONFIG.description
   const [bodyA, bodyB] = splitIntoTwoParagraphs(summarySource)
   const secondParagraph = bodyB || SITE_CONFIG.tagline
 
   return (
-    <main className="bg-[#fafafa] text-[#1a1a1a]">
-      <div className="mx-auto min-h-screen max-w-[1400px] border-x border-[#0f172a]/8 bg-white shadow-[0_0_0_1px_rgba(15,23,42,0.04)]">
-        <section className="px-5 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10 lg:items-start">
-            {/* Left: lead story — headings + highlighted body */}
-            <div className="order-1 max-w-xl lg:pt-2">
-              <p className="font-display text-[2.15rem] font-medium leading-[1.05] tracking-[-0.04em] sm:text-5xl">
-                {SITE_CONFIG.name}
-              </p>
-              <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-[#444]">{SITE_CONFIG.tagline}</p>
-
-              <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#64748b]">
-                {lead ? getPostCategoryLabel(lead) : 'Featured'}
-              </p>
-              <h1 className="font-display mt-3 text-[2.35rem] font-medium leading-[1.08] tracking-[-0.035em] text-[#111] sm:text-5xl lg:text-[2.75rem]">
-                <span className="decoration-primary/35 underline decoration-2 underline-offset-[0.18em]">{headline}</span>
+    <main className="bg-white text-[#1a1a1a]">
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-12">
+              <h1 className="text-5xl font-bold text-gray-900 sm:text-6xl lg:text-7xl mb-6">
+                Your Trusted <span className="text-blue-600">Partner</span> for
+                <br />
+                Press Release Distribution
               </h1>
-
-              <div className="mt-8 space-y-5 rounded-r-xl border-l-4 border-primary bg-primary/6 py-4 pl-5 pr-4 text-[0.98rem] leading-[1.75] text-[#2d2d2d]">
-                {bodyA ? <p>{bodyA}</p> : null}
-                {secondParagraph ? <p className="text-[#3d3d3d]">{secondParagraph}</p> : null}
-              </div>
-
-              {featuredSecondary ? (
-                <Link
-                  href={postHref(featuredSecondary)}
-                  className="mt-10 block max-w-lg border-t border-black/10 pt-8 transition-colors hover:bg-[#f8fafc]"
-                >
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#64748b]">Also this week</p>
-                  <p className="font-display mt-2 text-lg font-semibold leading-snug text-[#0f172a]">
-                    {featuredSecondary.title}
-                  </p>
-                  {featuredSecondary.summary ? (
-                    <p className="mt-3 rounded-md bg-amber-50/90 px-3 py-2 text-sm leading-relaxed text-[#422006] ring-1 ring-amber-200/80">
-                      {featuredSecondary.summary}
-                    </p>
-                  ) : null}
-                </Link>
-              ) : (
-                <div className="mt-10 border-t border-black/10 pt-8">
-                  <Link
-                    href={primaryTask?.route || '/articles'}
-                    className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}
-                  >
-                    {primaryTask?.label || 'Browse'}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {/* Center: spotlight stack — text-only cards */}
-            <div className="order-3 flex flex-col gap-5 lg:order-2">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#64748b]">Spotlight</p>
-              {spotlightPosts.length ? (
-                spotlightPosts.map((post, i) => (
-                  <Link
-                    key={post.id}
-                    href={postHref(post)}
-                    className="group rounded-xl border border-black/10 bg-[#fafafa] p-5 shadow-sm transition hover:border-primary/40 hover:shadow-md"
-                  >
-                    <span className="text-[10px] font-bold tabular-nums text-primary/80">{String(i + 1).padStart(2, '0')}</span>
-                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">
-                      {getPostCategoryLabel(post)}
-                    </p>
-                    <h2 className="font-display mt-2 text-xl font-semibold leading-snug text-[#0f172a] group-hover:text-primary">
-                      {post.title}
-                    </h2>
-                    {post.summary ? (
-                      <p className="mt-3 border-l-2 border-primary/50 pl-3 text-sm leading-relaxed text-[#444]">{post.summary}</p>
-                    ) : null}
-                  </Link>
-                ))
-              ) : (
-                <p className="text-sm text-[#666]">More stories will appear here.</p>
-              )}
-            </div>
-
-          </div>
-
-          {/* Heavy grid — more dummy / real cards, content-forward */}
-          {deckPosts.length ? (
-            <div className="mt-16 border-t border-black/10 pt-14">
-              <h2 className="font-display text-2xl font-semibold tracking-[-0.02em] text-[#111] sm:text-3xl">
-                <span className="bg-[linear-gradient(transparent_65%,rgba(29,78,216,0.15)_0)]">From the desk</span>
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm text-[#555]">
-                Longer summaries stay on the home page for scan-friendly reading. When your CMS feed is connected, these rows fill automatically from published posts.
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                We help businesses and organizations share their news with the world. 
+                Get your press releases distributed to thousands of media outlets and journalists.
               </p>
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {deckPosts.map((post) => (
-                  <Link
-                    key={post.id}
-                    href={postHref(post)}
-                    className="flex h-full flex-col rounded-2xl border border-black/10 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] transition hover:border-primary/35 hover:shadow-[0_12px_40px_rgba(15,23,42,0.1)]"
-                  >
-                    <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                      {getPostCategoryLabel(post)}
-                    </span>
-                    <h3 className="font-display mt-4 text-xl font-semibold leading-snug text-[#0f172a]">{post.title}</h3>
-                    {post.summary ? (
-                      <p className="mt-4 grow rounded-lg bg-slate-50 px-3 py-3 text-sm leading-[1.65] text-[#334155] ring-1 ring-slate-200/80">
-                        {post.summary}
-                      </p>
-                    ) : null}
-                  </Link>
-                ))}
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <button className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                  Get Started
+                </button>
+                <button className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                  Learn More
+                </button>
               </div>
             </div>
-          ) : null}
-
-          {supportTasks.length ? (
-            <div className="mt-16 grid gap-4 border-t border-black/10 pt-12 sm:grid-cols-2 lg:grid-cols-3">
-              {supportTasks.slice(0, 3).map((task) => (
-                <Link
-                  key={task.key}
-                  href={task.route}
-                  className="rounded-xl border border-black/10 bg-[#fafafa] px-5 py-4 transition hover:bg-[#f3f3f3]"
-                >
-                  <h3 className="font-display text-lg font-medium text-[#111]">{task.label}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#555]">{task.description}</p>
-                </Link>
-              ))}
-            </div>
-          ) : null}
+          </div>
         </section>
 
-        <div
-          className="h-4 w-full"
-          style={{
-            background:
-              'repeating-linear-gradient(90deg, #0a0a0a 0px, #0a0a0a 3px, #fff 3px, #fff 5px, #0a0a0a 5px, #0a0a0a 8px, #fafafa 8px, #fafafa 11px)',
-          }}
-          aria-hidden
-        />
+        {/* Statistics Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Trusted by Leading Companies</h2>
+              <p className="text-xl text-gray-600">Our platform delivers real results for press release distribution</p>
+            </div>
+            
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl font-bold text-blue-600">5K+</span>
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">5,000+</div>
+                <p className="text-gray-600 font-medium">Media Outlets</p>
+                <p className="text-sm text-gray-500 mt-1">Active distribution network</p>
+              </div>
+              <div className="text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl font-bold text-green-600">10M</span>
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">10M+</div>
+                <p className="text-gray-600 font-medium">Monthly Readers</p>
+                <p className="text-sm text-gray-500 mt-1">Across all platforms</p>
+              </div>
+              <div className="text-center">
+                <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl font-bold text-purple-600">98%</span>
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">98%</div>
+                <p className="text-gray-600 font-medium">Success Rate</p>
+                <p className="text-sm text-gray-500 mt-1">Stories published</p>
+              </div>
+              <div className="text-center">
+                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl font-bold text-orange-600">24/7</span>
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">24/7</div>
+                <p className="text-gray-600 font-medium">Support</p>
+                <p className="text-sm text-gray-500 mt-1">Dedicated team available</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Services Overview */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-gray-50">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+              <p className="text-xl text-gray-600">Comprehensive press release distribution and media solutions</p>
+            </div>
+            
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Press Release Distribution</h3>
+                <p className="text-gray-600 leading-relaxed">Reach thousands of media outlets with our targeted distribution network. Get your story covered by journalists and publications.</p>
+                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                  Learn more <span className="ml-1">→</span>
+                </a>
+              </div>
+              <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                  <Globe2 className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Media Relations</h3>
+                <p className="text-gray-600 leading-relaxed">Build lasting relationships with media professionals. Our team helps you connect with the right journalists for your industry.</p>
+                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                  Learn more <span className="ml-1">→</span>
+                </a>
+              </div>
+              <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                  <ShieldCheck className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Analytics & Reporting</h3>
+                <p className="text-gray-600 leading-relaxed">Track your press release performance with detailed analytics. Monitor pickups, engagement, and media coverage in real-time.</p>
+                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                  Learn more <span className="ml-1">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        
+        {/* Testimonials Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
+              <p className="text-xl text-gray-600">Trusted by leading companies and media professionals worldwide</p>
+            </div>
+            
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="bg-gray-50 rounded-xl p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600 font-bold">JD</span>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Jennifer Davis</h4>
+                    <p className="text-sm text-gray-600">PR Director, TechCorp</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-6">"HutdailyNews has transformed our press release strategy. The distribution network is exceptional and the analytics help us track every story's impact."</p>
+                <div className="flex text-yellow-400">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-xl p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <span className="text-green-600 font-bold">MR</span>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Michael Roberts</h4>
+                    <p className="text-sm text-gray-600">Marketing Manager, StartupHub</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-6">"The media relations support is outstanding. Our stories get picked up by major outlets consistently. Highly recommend their services."</p>
+                <div className="flex text-yellow-400">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-xl p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                    <span className="text-purple-600 font-bold">SC</span>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Sarah Chen</h4>
+                    <p className="text-sm text-gray-600">Communications Lead, InnovateCo</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-6">"The platform is intuitive and the results speak for themselves. We've seen a 300% increase in media coverage since partnering with HutdailyNews."</p>
+                <div className="flex text-yellow-400">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Newsletter Signup Section */}
+        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24 bg-blue-600 text-white">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="text-4xl font-bold mb-4">Stay Informed</h2>
+            <p className="text-xl mb-8 text-blue-100">Get the latest press releases and media insights delivered to your inbox</p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 rounded-lg border border-blue-400 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              />
+              <button className="px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors">
+                Subscribe
+              </button>
+            </div>
+            
+            <p className="mt-4 text-sm text-blue-100">Join 10,000+ media professionals. No spam, unsubscribe anytime.</p>
+          </div>
+        </section>
+
       </div>
     </main>
   )
@@ -502,7 +568,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
             {gallery.slice(0, 5).map((post, index) => (
               <Link
                 key={post.id}
-                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
+                href={getTaskHref('image', post.slug)}
                 className={index === 0 ? `col-span-2 row-span-2 overflow-hidden rounded-[2.4rem] ${tone.panel}` : `overflow-hidden rounded-[1.8rem] ${tone.soft}`}
               >
                 <div className={index === 0 ? 'relative h-[360px]' : 'relative h-[170px]'}>
@@ -567,7 +633,7 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
 
           <div className="grid gap-4 md:grid-cols-2">
             {collections.map((post) => (
-              <Link key={post.id} href={getTaskHref(resolveTaskKey(post.task, 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
+              <Link key={post.id} href={getTaskHref('sbm', post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Collection</p>
                 <h3 className="mt-3 text-2xl font-semibold">{post.title}</h3>
                 <p className={`mt-3 text-sm leading-8 ${tone.muted}`}>{post.summary || 'A calmer bookmark surface with room for context and grouping.'}</p>
