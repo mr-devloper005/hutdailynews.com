@@ -350,12 +350,12 @@ function EditorialHome({
                 Get your press releases distributed to thousands of media outlets and journalists.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <a href="/contact" className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center">
                   Get Started
-                </button>
-                <button className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                </a>
+                <a href="/about" className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -421,7 +421,7 @@ function EditorialHome({
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Press Release Distribution</h3>
                 <p className="text-gray-600 leading-relaxed">Reach thousands of media outlets with our targeted distribution network. Get your story covered by journalists and publications.</p>
-                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                <a href="/about" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
                   Learn more <span className="ml-1">→</span>
                 </a>
               </div>
@@ -431,7 +431,7 @@ function EditorialHome({
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Media Relations</h3>
                 <p className="text-gray-600 leading-relaxed">Build lasting relationships with media professionals. Our team helps you connect with the right journalists for your industry.</p>
-                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                <a href="/about" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
                   Learn more <span className="ml-1">→</span>
                 </a>
               </div>
@@ -441,7 +441,7 @@ function EditorialHome({
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Analytics & Reporting</h3>
                 <p className="text-gray-600 leading-relaxed">Track your press release performance with detailed analytics. Monitor pickups, engagement, and media coverage in real-time.</p>
-                <a href="#" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
+                <a href="/about" className="inline-flex items-center text-blue-600 font-semibold mt-4 hover:text-blue-700">
                   Learn more <span className="ml-1">→</span>
                 </a>
               </div>
@@ -506,6 +506,62 @@ function EditorialHome({
                   {'★'.repeat(5)}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Press Releases Grid */}
+        <section className="px-5 py-12 sm:px-8 lg:px-12 lg:py-16 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-neutral-900">Latest Press Releases</h2>
+              <Link href="/updates" className="flex items-center gap-1 text-sm font-semibold text-[#1a1f36] hover:underline">
+                View all <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {spotlightPosts.map((post) => {
+                const cat = getPostCategoryLabel(post)
+                const media = Array.isArray(post.media) ? post.media : []
+                const imgUrl = media.find((m: any) => typeof m?.url === 'string' && m.url)?.url
+                  || (typeof post.content === 'object' && post.content && Array.isArray((post.content as any).images) ? (post.content as any).images[0] : null)
+                  || (typeof post.content === 'object' && post.content && typeof (post.content as any).logo === 'string' ? (post.content as any).logo : null)
+                  || null
+                return (
+                  <Link key={post.id} href={postHref(post)} className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white transition-all hover:border-neutral-300 hover:shadow-md">
+                    <div className="relative h-44 overflow-hidden bg-neutral-100">
+                      {imgUrl ? (
+                        <img src={imgUrl} alt={post.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      ) : (
+                        <div className="h-full w-full bg-neutral-100" />
+                      )}
+                      <span className="absolute left-3 top-3 rounded-full bg-[#1a1f36] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+                        {cat}
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-neutral-900 group-hover:text-[#1a1f36] transition-colors">
+                        {post.title}
+                      </h3>
+                      {post.summary && (
+                        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-neutral-500">{post.summary}</p>
+                      )}
+                      <div className="mt-auto flex items-center justify-between pt-4 text-xs text-neutral-400">
+                        <span className="flex items-center gap-1">
+                          <FileText className="h-3.5 w-3.5" />
+                          Press Release
+                        </span>
+                        <span className="flex items-center gap-2">
+                          {post.authorName && <span>{post.authorName}</span>}
+                          {post.publishedAt && (
+                            <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </section>
